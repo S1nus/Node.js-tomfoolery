@@ -1,9 +1,17 @@
-var http = require("http");
+var events = require('events');
 
-http.createServer(function (request, response) {
-	response.writeHead(200, {'Content-Type': 'text/plain'});
-	response.end('Hello, world');
-}).listen(8081);
+var eventEmitter = new events.EventEmitter();
 
-console.log('Server running at http://127.0.0.1:8081');
+var connectHandler = function connected() { 
+	console.log('connection succesful');
+	eventEmitter.emit('data_received');
+}
 
+eventEmitter.on('connection', connectHandler);
+
+eventEmitter.on('data_received', function() {
+	console.log('data received succesfully');
+});
+
+eventEmitter.emit('connection');
+console.log("Program Ended");
